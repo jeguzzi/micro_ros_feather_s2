@@ -1,0 +1,8 @@
+# The following lines of boilerplate have to be in your project's CMakeLists
+# in this exact order for cmake to work correctly
+cmake_minimum_required(VERSION 3.5)
+
+set (EXTRA_COMPONENT_DIRS ${MICRO_ROS_DIR} "./../ros_feather_s2/components")
+
+include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+project(ros_feather_wing)
