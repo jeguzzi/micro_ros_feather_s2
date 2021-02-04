@@ -52,15 +52,16 @@ void set_colors(const led_strip_msgs__msg__LedStrips * msg) {
   blue_led_set(1);
   for (size_t i = 0; i < msg->strips.size; i++) {
     const led_strip_msgs__msg__LedStrip * strip_msg = msg->strips.data + i;
-    uint8_t channel_id = strip_msg->channel_index;
+    uint8_t channel_id = strip_msg->id;
+    channel_type_t type = (strip_msg->type == 0) ? CHANNEL_APA102_DATA : CHANNEL_WS2812;
 #ifdef TEST_ON_APA102
-  if(channel_id==0 && strip_msg->data.size >= 3) {
-    const uint8_t * rgb = (const uint8_t *) strip_msg->data.data;
-    apa102_set_color(rgb[0], rgb[1], rgb[2], brightness[channel_id]);
-  }
+    if(channel_id==0 && strip_msg->data.size >= 3) {
+      const uint8_t * rgb = (const uint8_t *) strip_msg->data.data;
+      apa102_set_color(rgb[0], rgb[1], rgb[2], brightness[channel_id]);
+    }
 #else
     pb_set_channel(
-        channel_id, CHANNEL_APA102_DATA, strip_msg->color_order == 0 ? RGB : BGR,
+        channel_id, type, strip_msg->color_order == 0 ? RGB : BGR,
         strip_msg->data.size, (const uint8_t *) strip_msg->data.data,
         FREQUENCY, brightness[channel_id]);
 #endif
